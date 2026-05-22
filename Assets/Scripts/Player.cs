@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     void SetSlider()
     {
         slider.gameObject.SetActive(true);
-        slider.value = rb.velocity.magnitude;
+        slider.value = rb.linearVelocity.magnitude;
     }
     void Update()
     {
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
         }
         if (isMoving)
         {
-            rb.velocity = Vector3.forward * speed * 1.5f;
+            rb.linearVelocity = Vector3.forward * speed * 1.5f;
         }
         float posX = Mathf.Clamp(transform.position.x, -2.5f, 2.5f);
         transform.position = new Vector3(posX, transform.position.y, transform.position.z);
@@ -100,7 +100,7 @@ public class Player : MonoBehaviour
             {
                 Quaternion rotationRamp = Quaternion.FromToRotation(-transform.forward, hit.normal) * transform.rotation;
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotationRamp, Time.deltaTime * 100);
-                if(rb.velocity.magnitude <= 25f)
+                if(rb.linearVelocity.magnitude <= 25f)
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
@@ -109,7 +109,7 @@ public class Player : MonoBehaviour
                     rb.AddForce(Vector3.forward * 60000 * Time.deltaTime);
                 }                
             }
-            else if (rb.velocity == Vector3.zero)
+            else if (rb.linearVelocity == Vector3.zero)
             {
                 
                 StartCoroutine(gameManager.Finish());
@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
         foreach (Collider collider in hitColliders)
         {
             if (collider.gameObject.tag.Equals("Object"))
-                collider.GetComponent<Rigidbody>().velocity += Vector3.forward * 3f;
+                collider.GetComponent<Rigidbody>().linearVelocity += Vector3.forward * 3f;
         }
     }
 
@@ -137,7 +137,7 @@ public class Player : MonoBehaviour
             isMoving = false;
             ObjectPush();
             Destroy(other.gameObject);
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
         }
 
         if (other.gameObject.tag.Equals("PowerUp"))
@@ -159,7 +159,7 @@ public class Player : MonoBehaviour
             gameManager.isLevelFinished = true;
             levelController.NextLevel();
         }
-        if (other.gameObject.tag.Equals("Bonus") && rb.velocity == Vector3.zero)
+        if (other.gameObject.tag.Equals("Bonus") && rb.linearVelocity == Vector3.zero)
         {
             if(!onBonus)
             Debug.Log("You earn " + other.gameObject.name + "0 diamonds");
